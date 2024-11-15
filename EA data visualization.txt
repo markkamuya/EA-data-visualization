@@ -1,0 +1,127 @@
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Step 1: Load the data
+df = pd.read_csv("EA50 Scientific Proposal_ Science of Learning Data - Raw Data 1.csv")
+
+
+# Step 3: Clean up the column names (remove any unwanted spaces or special characters)
+df.columns = df.columns.str.strip()  # Remove leading/trailing spaces
+
+# Step 4: Rename the relevant columns to more manageable names if needed
+df.rename(columns={
+    'Considering your remote/online learning experience, indicate how much you agree with the following statements: [I am often distracted when doing course work/attending classes]': 'Distraction_online',
+    'Considering your prior in-person learning experience, indicate how much you agree with the following statements  [I am often distracted when doing course work/attending classes]': 'Distraction_inperson'
+}, inplace=True)
+
+# Mapping categorical values to numeric values
+distraction_mapping = {
+    'Strongly Disagree': 1,
+    'Disagree': 2,
+    'Neutral': 3,
+    'Agree': 4,
+    'Strongly Agree': 5
+}
+
+# Step 1: Map the categorical values to numeric for both distraction columns
+df['Distraction_online'] = df['Distraction_online'].map(distraction_mapping)
+df['Distraction_inperson'] = df['Distraction_inperson'].map(distraction_mapping)
+
+# Step 7: Handle missing values by filling with the median value
+df['Distraction_online'] = df['Distraction_online'].fillna(df['Distraction_online'].median())
+df['Distraction_inperson'] = df['Distraction_inperson'].fillna(df['Distraction_inperson'].median())
+
+# --- Box Plot: Comparing Distraction Levels ---
+plt.figure(figsize=(10, 6))
+sns.boxplot(data=df[['Distraction_online', 'Distraction_inperson']], palette="Set2")
+plt.title('Comparison of Distraction Levels in Online vs In-Person Courses', fontsize=16)
+plt.xlabel('Mode of Learning', fontsize=14)
+plt.ylabel('Distraction Level (1 = Strongly Disagree, 5 = Strongly Agree)', fontsize=14)
+plt.xticks([0, 1], ['Online', 'In-Person'])
+plt.grid(True)
+plt.figtext(0.5, -0.12, 
+            "This box plot compares the distribution of distraction levels between online and in-person courses. "
+            "Each box represents the interquartile range (IQR), and the horizontal line shows the median value. "
+            "Outliers are marked as points outside the whiskers of the box. "
+            "The plot highlights any differences in how students perceive distractions in these two environments.",
+            wrap=True, horizontalalignment='center', fontsize=12)
+plt.tight_layout()
+plt.show()
+
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Step 1: Load the data
+df = pd.read_csv("EA50 Scientific Proposal_ Science of Learning Data - Raw Data 1.csv")
+
+# Step 2: Clean up the column names (remove any unwanted spaces or special characters)
+df.columns = df.columns.str.strip()
+
+# Step 3: Rename the relevant columns to more manageable names
+df.rename(columns={
+    'Considering your remote/online learning experience, indicate how much you agree with the following statements: [I am often distracted when doing course work/attending classes]': 'Distraction_online',
+    'Considering your prior in-person learning experience, indicate how much you agree with the following statements  [I am often distracted when doing course work/attending classes]': 'Distraction_inperson',
+    
+    # Rename participation-related columns
+    'Considering your remote/online learning experience, indicate how much you agree with the following statements: [I often ask questions, comment, and/or join discussions (either live, in chat or through email). ]': 'Participation_online',
+    'Considering your prior in-person learning experience, indicate how much you agree with the following statements  [I often ask questions, comment, and/or join discussions (either live, in chat or through email).]': 'Participation_inperson'
+}, inplace=True)
+
+# Mapping categorical values to numeric values for participation columns
+distraction_mapping = {
+    'Strongly Disagree': 1,
+    'Disagree': 2,
+    'Neutral': 3,
+    'Agree': 4,
+    'Strongly Agree': 5
+}
+
+# Step 4: Map the categorical values to numeric for both participation columns only
+df['Participation_online'] = df['Participation_online'].map(distraction_mapping)
+df['Participation_inperson'] = df['Participation_inperson'].map(distraction_mapping)
+
+# Step 5: Handle missing values by filling with the median value
+df['Participation_online'] = df['Participation_online'].fillna(df['Participation_online'].median())
+df['Participation_inperson'] = df['Participation_inperson'].fillna(df['Participation_inperson'].median())
+
+# --- Calculate the average values for participation ---
+avg_participation = df[['Participation_online', 'Participation_inperson']].mean()
+
+# Prepare the data for the bar plot
+avg_participation_data = pd.DataFrame({
+    'Mode of Learning': ['Online', 'In-Person'],
+    'Average Participation': avg_participation
+})
+
+# --- Bar Plot: Comparing Participation Levels ---
+
+# Create the bar plot
+plt.figure(figsize=(10, 6))  # Set figure size
+
+sns.barplot(x='Mode of Learning', y='Average Participation', data=avg_participation_data, palette='Set2')
+
+# Customize the plot
+plt.title('Comparison of Participation Levels in Online vs In-Person Learning', fontsize=16, weight='bold')  # Title of the plot
+plt.xlabel('Mode of Learning', fontsize=14, weight='bold')  # Label for the x-axis
+plt.ylabel('Average Participation Level', fontsize=14, weight='bold')  # Label for the y-axis
+
+# Add grid
+plt.grid(True, linestyle='--', alpha=0.7)
+
+# Add a detailed caption addressing the trend and environmental/cognitive factors
+plt.figtext(0.5, -0.18, 
+            "This bar plot compares the average participation levels between online and in-person learning environments. "
+            "The data indicates that students report higher participation levels in in-person courses compared to online courses. "
+            "This trend could be influenced by various cognitive and environmental factors. In-person learning typically offers "
+            "more opportunities for direct interaction, collaboration, and immediate feedback, which can enhance student engagement. "
+            "Conversely, online learning environments may introduce challenges such as technological distractions and a sense of isolation, "
+            "which may reduce student participation.",
+            wrap=True, horizontalalignment='center', fontsize=12, weight='normal')  # Add description below the plot
+
+# Step 6: Display the plot
+plt.tight_layout()  # Adjust layout to prevent overlap
+plt.show()
