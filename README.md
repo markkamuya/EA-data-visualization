@@ -115,7 +115,3 @@ A **bar plot** visualizes the average participation levels in online and in-pers
    The script will generate the following plots:
    - A **box plot** comparing distraction levels between online and in-person learning.
    - A **bar plot** comparing average participation levels between the two modes.
-
----
-
-This `README.md` provides an extremely technical overview of the code and its functionality, with emphasis on the steps taken in data processing, transformations, and visual analysis. It also includes necessary installation steps and script execution instructions.
